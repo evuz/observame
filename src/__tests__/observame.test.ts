@@ -79,7 +79,7 @@ describe('Observame', () => {
       emitter.emit(0)
       emitter.emit(1)
 
-      const obs = observame<number>(emitter).pipe((v, next) => {
+      const obs = observame<number>(emitter).pipe(next => (v) => {
         operatorFn()
         next(v)
       })
@@ -104,7 +104,7 @@ describe('Observame', () => {
 
       const values: number[] = []
       const obs = observame<number>(emitter)
-      const obs1 = obs.pipe((v, next) => {
+      const obs1 = obs.pipe((next) => (v) => {
         operatorFn()
         next(v)
       })
@@ -129,7 +129,7 @@ describe('Observame', () => {
 
       const values: number[] = []
       const obs = observame<number>(emitter)
-      const obs1 = obs.pipe((v, next) => {
+      const obs1 = obs.pipe((next) => (v) => {
         operatorFn()
         next(v)
       })
