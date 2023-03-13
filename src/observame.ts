@@ -1,11 +1,11 @@
-import { Subscribable, Handler, OperatorFunction } from './types'
+import { Subscribable, Handler, OperatorFunction, Unsubscribe } from './types'
 
-function createHandler (creators: OperatorFunction<any, any>[]) {
+function createHandler (creators: OperatorFunction<any, any>[], unsubscribeFn: Unsubscribe) {
   let next: Handler<any> = () => {}
   let creator = creators.pop()
 
   while (creator) {
-    next = creator(next)
+    next = creator(next, unsubscribeFn)
     creator = creators.pop()
   }
 
@@ -18,7 +18,15 @@ export class Observame<T> {
   constructor (private subscribable: Subscribable<T>, private pipes: OperatorFunction<any, any>[] = []) {}
 
   subscribe (handler: Handler<T>) {
-    return this.subscribable.subscribe(createHandler(this.pipes.concat(() => handler)))
+    let hasUnsubscribe = false
+    let unsubscribeFn = () => { hasUnsubscribe = true }
+
+    const subscription = this.subscribable.subscribe(createHandler(this.pipes.concat(() => handler), () => unsubscribeFn()))
+    unsubscribeFn = subscription.unsubscribe.bind(subscription)
+
+    if (hasUnsubscribe) unsubscribeFn()
+
+    return subscription
   }
 
   pipe<A>(fn: OperatorFunction<T, A>): Observame<A>
