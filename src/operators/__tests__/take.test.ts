@@ -5,7 +5,7 @@ import { Emitter } from '../../__tests__/helpers'
 import { take } from '../take'
 
 describe('Operators: take', () => {
-  test('should take only first three values', () => {
+  test('should take only first five values', () => {
     type EmitValue = number
     const unsubscribe = vi.fn()
     const emitter = new Emitter<EmitValue>(unsubscribe)

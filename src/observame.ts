@@ -5,7 +5,8 @@ function createHandler (creators: OperatorFunction<any, any>[], unsubscribeFn: U
   let creator = creators.pop()
 
   while (creator) {
-    next = creator(next, unsubscribeFn)
+    const _next = creator(next, unsubscribeFn)
+    if (_next) next = _next
     creator = creators.pop()
   }
 
@@ -18,14 +19,16 @@ export class Observame<T> {
   constructor (private subscribable: Subscribable<T>, private pipes: OperatorFunction<any, any>[] = []) {}
 
   subscribe (handler: Handler<T>) {
-    let hasUnsubscribe = false
-    let unsubscribeFn = () => { hasUnsubscribe = true }
+    let isUnsubscribe = false
+    let unsubscribeFn = () => { isUnsubscribe = true }
 
-    const subscription = this.subscribable.subscribe(createHandler(this.pipes.concat(() => handler), () => unsubscribeFn()))
+    const pipes = this.pipes.concat(() => handler)
+    const _handler = createHandler(pipes, () => unsubscribeFn())
+    const subscription = this.subscribable.subscribe(_handler)
+
     unsubscribeFn = subscription.unsubscribe.bind(subscription)
 
-    if (hasUnsubscribe) unsubscribeFn()
-
+    if (isUnsubscribe) unsubscribeFn()
     return subscription
   }
 
