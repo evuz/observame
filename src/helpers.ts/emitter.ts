@@ -10,9 +10,13 @@ export class Emitter<T> {
   subscribe<T> (handler: Handler<T>) {
     const length = this.listeners.push(handler)
     const index = length - 1
+    let alive = true
 
     return {
       unsubscribe: () => {
+        if (!alive) return
+
+        alive = false
         this.listeners.splice(index, 1)
       }
     }
