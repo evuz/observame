@@ -1,4 +1,5 @@
-import { Subscribable, Handler, OperatorFunction, Unsubscribe } from './types'
+import { Unsubscribe } from './subscription'
+import { Subscribable, Handler, OperatorFunction } from './types'
 
 function createHandler (creators: OperatorFunction<any, any>[], unsubscribeFn: Unsubscribe) {
   let next: Handler<any> = () => {}

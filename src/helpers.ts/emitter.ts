@@ -1,3 +1,4 @@
+import { Subscription } from '../subscription'
 import { Handler } from '../types'
 
 export class Emitter<T> {
@@ -12,13 +13,11 @@ export class Emitter<T> {
     const index = length - 1
     let alive = true
 
-    return {
-      unsubscribe: () => {
-        if (!alive) return
+    return new Subscription(() => {
+      if (!alive) return
 
-        alive = false
-        this.listeners.splice(index, 1)
-      }
-    }
+      alive = false
+      this.listeners.splice(index, 1)
+    })
   }
 }

@@ -1,3 +1,4 @@
+import { Subscription } from '../subscription'
 import { Handler } from '../types'
 
 export class Emitter<T> {
@@ -12,8 +13,9 @@ export class Emitter<T> {
   subscribe<T> (handler: Handler<T>) {
     this.listeners.push(handler)
 
-    return {
-      unsubscribe: () => { this.unsubscribe?.() }
-    }
+    return new Subscription(() => {
+      this.listeners.splice(this.listeners.indexOf(handler, 1))
+      this.unsubscribe?.()
+    })
   }
 }

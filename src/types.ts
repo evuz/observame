@@ -1,7 +1,4 @@
-export type Unsubscribe = () => void
-export type Subscription = {
-  unsubscribe: Unsubscribe
-}
+import type { Subscription, Unsubscribe } from './subscription'
 
 export type Handler<T> = (value: T) => void
 export type Subscribable<T> = {
