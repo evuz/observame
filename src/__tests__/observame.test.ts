@@ -148,5 +148,29 @@ describe('Observame', () => {
 
       expect(unsubscribe).toBeCalledTimes(2)
     })
+
+    test('should call complete operator', () => {
+      const complete = vi.fn()
+      const emitter = new Emitter<number>()
+
+      emitter.emit(0)
+      emitter.emit(1)
+
+      const values: number[] = []
+      const obs = observame<number>(emitter).pipe((next) => [v => next(v * 10), complete], () => [undefined, complete])
+
+      const s = obs.subscribe(v => values.push(v as number))
+
+      emitter.emit(1)
+      emitter.emit(2)
+
+      expect(complete).toBeCalledTimes(0)
+      expect(values.length).toEqual(2)
+      expect(values).toEqual([10, 20])
+
+      s.unsubscribe()
+
+      expect(complete).toBeCalledTimes(2)
+    })
   })
 })
