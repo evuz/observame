@@ -3,6 +3,7 @@ export * from './observame'
 export * from './emitme'
 
 // Operators
+export * from './operators/distinct'
 export * from './operators/filter'
 export * from './operators/map'
 export * from './operators/skip'
