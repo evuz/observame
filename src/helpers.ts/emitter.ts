@@ -9,15 +9,14 @@ export class Emitter<T> {
   }
 
   subscribe<T> (handler: Handler<T>) {
-    const length = this.listeners.push(handler)
-    const index = length - 1
+    this.listeners.push(handler)
     let alive = true
 
     return new Subscription(() => {
       if (!alive) return
 
       alive = false
-      this.listeners.splice(index, 1)
+      this.listeners.splice(this.listeners.indexOf(handler), 1)
     })
   }
 }

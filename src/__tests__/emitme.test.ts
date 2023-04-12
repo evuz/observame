@@ -72,4 +72,32 @@ describe('Emitme', () => {
 
     expect(fn).toBeCalledTimes(2)
   })
+
+  test('should unsubscribe several subscriptions', () => {
+    const emitme = new Emitme<number>()
+
+    emitme.emit(0)
+
+    const v1: number[] = []
+    const v2: number[] = []
+    const v3: number[] = []
+
+    const s1 = emitme.subscribe(v => v1.push(v))
+    const s2 = emitme.subscribe(v => v2.push(v))
+    const s3 = emitme.subscribe(v => v3.push(v))
+
+    emitme.emit(1)
+    emitme.emit(2)
+
+    s2.unsubscribe()
+    emitme.emit(3)
+    s3.unsubscribe()
+    emitme.emit(4)
+    s1.unsubscribe()
+    emitme.emit(5)
+
+    expect(v1).toEqual([1, 2, 3, 4])
+    expect(v2).toEqual([1, 2])
+    expect(v3).toEqual([1, 2, 3])
+  })
 })

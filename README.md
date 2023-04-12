@@ -12,5 +12,3 @@ You can install observame using npm:
 ```
 $ npm install observame
 ```
-
-## Usage

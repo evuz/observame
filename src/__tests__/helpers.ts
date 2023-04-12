@@ -14,7 +14,7 @@ export class Emitter<T> {
     this.listeners.push(handler)
 
     return new Subscription(() => {
-      this.listeners.splice(this.listeners.indexOf(handler, 1))
+      this.listeners.splice(this.listeners.indexOf(handler), 1)
       this.unsubscribe?.()
     })
   }
